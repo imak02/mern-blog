@@ -34,6 +34,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import "./NavBar.scss";
 import { useContext, useState } from "react";
 import { DarkModeContext } from "../context/ThemeContextProvider";
+import { AuthContext } from "../context/AuthContextProvider";
 
 let isLoggedIn = false;
 
@@ -49,6 +50,8 @@ const NavBar = () => {
   };
 
   const { myThemeMode, setMyThemeMode } = useContext(DarkModeContext);
+  const data = useContext(AuthContext);
+  console.log(data);
 
   return (
     <AppBar position="static" sx={{ borderBottom: "5px solid red" }}>
