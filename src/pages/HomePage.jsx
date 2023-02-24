@@ -11,7 +11,7 @@ const HomePage = () => {
         display: "flex",
         alignItems: "center",
         flexWrap: "wrap",
-        rowGap: 4,
+        rowGap: 10,
         justifyContent: "space-between",
       }}
     >

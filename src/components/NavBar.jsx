@@ -7,18 +7,12 @@ import {
   Menu,
   Container,
   Avatar,
-  Button,
   Tooltip,
   MenuItem,
   CircularProgress,
   Divider,
   Fab,
-  List,
-  ListItem,
-  ListItemButton,
   ListItemIcon,
-  ListItemText,
-  SwipeableDrawer,
   Paper,
   InputBase,
 } from "@mui/material";
@@ -32,18 +26,16 @@ import {
   PersonAdd,
   PersonPin,
   Settings,
-  Inbox,
-  Mail,
   Search,
   Directions,
 } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 
 import "./NavBar.scss";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { DarkModeContext } from "../context/ThemeContextProvider";
 
 let isLoggedIn = false;
-let themeMode = "light";
 
 const NavBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -56,12 +48,17 @@ const NavBar = () => {
     setAnchorElUser(null);
   };
 
+  const { myThemeMode, setMyThemeMode } = useContext(DarkModeContext);
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ borderBottom: "5px solid red" }}>
       <Container maxWidth="false">
         <Toolbar
           disableGutters
-          sx={{ display: "flex", justifyContent: "space-between" }}
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
         >
           <Typography
             variant="h6"
@@ -171,14 +168,15 @@ const NavBar = () => {
               mr: { md: 4 },
               display: "inline-flex",
               order: { xs: -1, md: 0 },
+              color: "black",
             }}
           >
-            {themeMode === "light" ? (
+            {myThemeMode === "light" ? (
               <Tooltip arrow title="Dark mode">
                 <Fab
                   aria-label="DarkMode"
                   size="small"
-                  onClick={() => dispatch(dark())}
+                  onClick={() => setMyThemeMode("dark")}
                 >
                   <DarkMode fontSize="small" />
                 </Fab>
@@ -188,7 +186,7 @@ const NavBar = () => {
                 <Fab
                   aria-label="LightMode"
                   size="small"
-                  onClick={() => dispatch(light())}
+                  onClick={() => setMyThemeMode("light")}
                 >
                   <LightMode fontSize="small" />
                 </Fab>

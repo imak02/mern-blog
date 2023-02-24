@@ -40,7 +40,7 @@ const router = createBrowserRouter([
 
 const App = () => {
   return (
-    <Box sx={{ backgroundColor: "#eeeeee" }}>
+    <Box sx={{ backgroundColor: "background.default" }}>
       <RouterProvider router={router} />
     </Box>
   );
