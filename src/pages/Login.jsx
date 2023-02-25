@@ -63,7 +63,8 @@ export default function Login() {
           container
           component="main"
           sx={{
-            paddingY: { md: 10 },
+            borderRight: "3px solid red",
+            borderBottom: "3px solid red",
           }}
         >
           <Grid

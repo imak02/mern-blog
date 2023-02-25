@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, LinearProgress } from "@mui/material";
 import React from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 
@@ -14,6 +14,7 @@ import Register from "./pages/Register";
 const Layout = () => {
   return (
     <>
+      {/* <LinearProgress color="warning" /> */}
       <NavBar />
       <Outlet />
     </>
@@ -40,7 +41,7 @@ const router = createBrowserRouter([
 
 const App = () => {
   return (
-    <Box sx={{ backgroundColor: "background.default" }}>
+    <Box sx={{ backgroundColor: "background.default", minHeight: "100vh" }}>
       <RouterProvider router={router} />
     </Box>
   );

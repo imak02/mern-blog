@@ -17,7 +17,11 @@ const BlogCard = () => {
   return (
     <Paper
       elevation={6}
-      sx={{ borderRight: "3px solid red", borderBottom: "3px solid red" }}
+      sx={{
+        borderRight: "3px solid red",
+        borderBottom: "3px solid red",
+        maxWidth: 700,
+      }}
     >
       <Card
         sx={{

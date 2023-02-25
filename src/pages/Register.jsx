@@ -115,6 +115,8 @@ const Register = () => {
         sx={{
           width: { md: "80vw" },
           margin: { md: " auto" },
+          borderTop: "3px solid red",
+          borderLeft: "3px solid red",
         }}
       >
         <Grid
