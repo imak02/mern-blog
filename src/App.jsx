@@ -5,6 +5,7 @@ import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 //Pages
 import NavBar from "./components/NavBar";
 import BlogDetails from "./pages/BlogDetails";
+import CreateBlog from "./pages/CreateBlog";
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
         element: <BlogDetails />,
       },
       { path: "/profile", element: <Profile /> },
+      { path: "/blog/create", element: <CreateBlog /> },
     ],
   },
   { path: "/login", element: <Login /> },

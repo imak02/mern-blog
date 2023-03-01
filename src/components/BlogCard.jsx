@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
@@ -13,19 +13,19 @@ import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Paper } from "@mui/material";
 
-const BlogCard = () => {
+const BlogCard = ({ blog }) => {
   return (
     <Paper
       elevation={6}
       sx={{
         borderRight: "3px solid red",
         borderBottom: "3px solid red",
-        maxWidth: 700,
+        width: { xs: "100%", md: 700 },
       }}
     >
       <Card
         sx={{
-          maxWidth: 700,
+          width: "100%",
           backgroundColor: "background.default",
           px: 2,
         }}
@@ -47,20 +47,30 @@ const BlogCard = () => {
         <CardMedia
           component="img"
           height="300"
-          src="https://images.pexels.com/photos/12309506/pexels-photo-12309506.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
-          alt="Paella dish"
+          src={`http://localhost:8000${blog.image}`}
+          alt={blog.image}
           sx={{ p: 2, borderRadius: "15px" }}
         />
-        <CardContent>
-          <Typography variant="h6" sx={{ lineHeight: 1.4, mb: 2 }}>
-            Maximize your React JS capabilities with these 5 libraries
+
+        <CardContent sx={{ width: "100%" }}>
+          <Typography
+            variant="h6"
+            sx={{ lineHeight: 1.4, mb: 2, overflowWrap: "break-word" }}
+          >
+            {blog.title}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests. Add 1 cup of frozen peas along with
-            the mussels, if you like. This impressive paella is a perfect party
-            dish and a fun meal to cook together with your guests. Add 1 cup of
-            frozen peas along with the mussels, if you like.
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              overflowWrap: "break-word",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {blog.description.length > 400
+              ? blog.description.substring(0, 400) + "..."
+              : blog.description}
           </Typography>
         </CardContent>
         <CardActions disableSpacing>

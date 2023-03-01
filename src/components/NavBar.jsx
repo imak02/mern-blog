@@ -28,6 +28,8 @@ import {
   Settings,
   Search,
   Directions,
+  PostAdd,
+  BorderColor,
 } from "@mui/icons-material";
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -49,9 +51,7 @@ const NavBar = () => {
     if (isLoggedIn) {
       const getUser = async () => {
         try {
-          const response = await axios.get(
-            "http://localhost:8000/user/current-user"
-          );
+          const response = await axios.get("/user/current-user");
           auth.setUser(response.data.data);
         } catch (error) {
           console.log(error);
@@ -146,7 +146,7 @@ const NavBar = () => {
           </Link>
           <Box
             sx={{
-              flexGrow: 1,
+              flexGrow: 2,
               justifyContent: "center",
               display: { xs: "none", md: "flex" },
             }}
@@ -181,7 +181,47 @@ const NavBar = () => {
               </IconButton>
             </Paper>
           </Box>
-          {/* <Box sx={{}}> */}
+          <Box
+            sx={{
+              display: { xs: "none", lg: "flex" },
+              gap: 3,
+              flexGrow: 1,
+            }}
+          >
+            <NavLink className="links" to="/blog/create">
+              <Tooltip arrow title="Create post">
+                <Fab
+                  aria-label="Write"
+                  size="medium"
+                  variant="extended"
+                  color="success"
+                >
+                  <PostAdd sx={{ mr: 1 }} />
+                  Create Post
+                </Fab>
+              </Tooltip>
+            </NavLink>
+          </Box>
+
+          <Box
+            sx={{
+              display: { xs: "flex", lg: "none" },
+              mr: 1,
+            }}
+          >
+            <NavLink className="links" to="/blog/create">
+              <Tooltip arrow title="Create post">
+                <Fab
+                  aria-label="Write"
+                  size="small"
+                  variant="circular"
+                  color="warning"
+                >
+                  <PostAdd fontSize="small" />
+                </Fab>
+              </Tooltip>
+            </NavLink>
+          </Box>
           <Box
             sx={{
               mr: { md: 4 },

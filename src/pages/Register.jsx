@@ -102,7 +102,7 @@ const Register = () => {
 
         const response = await axios({
           method: "post",
-          url: "http://localhost:8000/user/register",
+          url: "/user/register",
           data: formContent,
         });
 

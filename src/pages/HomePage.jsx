@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Container } from "@mui/material";
 import BlogCard from "../components/BlogCard";
+import axios from "axios";
 
 const HomePage = () => {
+  const [blogs, setBlogs] = useState([]);
+
+  useEffect(() => {
+    const getBlogs = async () => {
+      const result = await axios.get("/blog");
+      if (result) {
+        setBlogs(result?.data?.data);
+      }
+      console.log(blogs);
+    };
+    getBlogs();
+  }, []);
+
   return (
     <Container
       maxWidth="xl"
@@ -15,14 +29,9 @@ const HomePage = () => {
         justifyContent: "space-between",
       }}
     >
-      <BlogCard />
-      <BlogCard />
-
-      <BlogCard />
-
-      <BlogCard />
-
-      <BlogCard />
+      {blogs.map((blog) => (
+        <BlogCard key={blog._id} blog={blog} />
+      ))}
     </Container>
   );
 };
