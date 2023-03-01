@@ -1,12 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Avatar,
-  Box,
   Container,
   Divider,
   Grid,
-  ImageList,
-  ImageListItem,
   List,
   ListItem,
   ListItemText,
@@ -15,10 +12,10 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
-// import { useSelector } from "react-redux";
+import { Button, CardActions } from "@mui/material";
 import { Link } from "react-router-dom";
 import BlogCard from "../components/BlogCard";
+import { AuthContext } from "../context/AuthContextProvider";
 
 const ProfileListItem = (props) => {
   return (
@@ -32,12 +29,9 @@ const ProfileListItem = (props) => {
 };
 
 const Profile = () => {
-  // const user = useSelector((state) => state.auth.user ?? "");
-  const user = {
-    fullName: "Asbin Khanal",
-    email: "asbin@gmail.com",
-    userName: "imak02",
-  };
+  const authCtx = useContext(AuthContext);
+  const user = authCtx.user;
+
   return (
     <Container maxWidth="xl">
       <Grid container>
@@ -77,7 +71,7 @@ const Profile = () => {
 
             <CardMedia sx={{ display: "flex", justifyContent: "center" }}>
               <Avatar
-                alt={user.fullName}
+                alt={user.name}
                 src="/profile.jpeg"
                 sx={{ width: 150, height: 150 }}
               />
@@ -89,7 +83,7 @@ const Profile = () => {
                 component="div"
                 sx={{ textAlign: "center" }}
               >
-                {user.fullName}
+                {user.name}
               </Typography>
               <List sx={{ textAlign: "center" }}>
                 <Typography

@@ -32,14 +32,34 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 
 import "./NavBar.scss";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "../context/ThemeContextProvider";
 import { AuthContext } from "../context/AuthContextProvider";
-
-let isLoggedIn = false;
+import axios from "axios";
 
 const NavBar = () => {
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const { myThemeMode, setMyThemeMode } = useContext(DarkModeContext);
+
+  const auth = useContext(AuthContext);
+  const isLoggedIn = auth.isLoggedIn;
+  const user = auth.user ?? "";
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      const getUser = async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:8000/user/current-user"
+          );
+          auth.setUser(response.data.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      getUser();
+    }
+  }, [isLoggedIn]);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -48,10 +68,6 @@ const NavBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const { myThemeMode, setMyThemeMode } = useContext(DarkModeContext);
-  const data = useContext(AuthContext);
-  console.log(data);
 
   return (
     <AppBar position="static" sx={{ borderBottom: "5px solid red" }}>
@@ -212,15 +228,15 @@ const NavBar = () => {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip arrow title="Profile Settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  {userResult.isLoading ? (
+                  {/* {userResult.isLoading ? (
                     <CircularProgress />
-                  ) : (
-                    <Avatar
-                      alt={user.firstName}
-                      src="profile.jpeg"
-                      sx={{ bgcolor: "orange", color: "black" }}
-                    />
-                  )}
+                  ) : ( */}
+                  <Avatar
+                    alt={user.name}
+                    src="profile.jpeg"
+                    sx={{ bgcolor: "orange", color: "black" }}
+                  />
+                  {/* )} */}
                 </IconButton>
               </Tooltip>
               <Menu
@@ -263,10 +279,9 @@ const NavBar = () => {
                   },
                 }}
               >
-                <Link to={`/profile/${user._id}`} className="links">
+                <Link to={`/profile`} className="links">
                   <MenuItem onClick={handleCloseUserMenu}>
-                    <Avatar alt={user.firstName} src="profile.jpeg" />{" "}
-                    {user.firstName + " " + user.lastName}
+                    <Avatar alt={user.name} src="profile.jpeg" /> {user.name}
                   </MenuItem>
                 </Link>
 
@@ -285,7 +300,7 @@ const NavBar = () => {
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
-                    dispatch(logout());
+                    auth.logout();
                   }}
                 >
                   <ListItemIcon>

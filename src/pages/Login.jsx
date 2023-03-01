@@ -7,12 +7,14 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { Chip, Container, Divider } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
 import { Google, Visibility, VisibilityOff } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { AuthContext } from "../context/AuthContextProvider";
 
 const validationSchema = Yup.object({
   user: Yup.string("Enter your email")
@@ -26,11 +28,16 @@ const validationSchema = Yup.object({
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const auth = useContext(AuthContext);
+  // console.log(auth);
 
   const formik = useFormik({
     initialValues: {
@@ -41,7 +48,23 @@ export default function Login() {
     validationSchema: validationSchema,
 
     onSubmit: async (values, { resetForm }) => {
-      console.log(values);
+      try {
+        const response = await axios({
+          method: "post",
+          url: "http://localhost:8000/user/login",
+          data: values,
+        });
+
+        if (response) {
+          auth.login(response.data.data.token);
+          resetForm();
+          navigate("/");
+        }
+
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 

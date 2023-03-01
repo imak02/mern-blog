@@ -19,6 +19,7 @@ import * as Yup from "yup";
 import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
 import { Google, Visibility, VisibilityOff } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const nameRegex = /^[a-zA-Z-' ]+$/;
 const userNameRegex = /^[a-z0-9_-]{3,15}$/;
@@ -89,8 +90,30 @@ const Register = () => {
     },
     validationSchema: validationSchema,
 
+    // onSubmit: async (values, { resetForm }) => {
+    //   console.log(values);
+    // },
+
     onSubmit: async (values, { resetForm }) => {
-      console.log(values);
+      try {
+        let formContent = Object.assign({}, values);
+        delete formContent.terms;
+        delete formContent.password2;
+
+        const response = await axios({
+          method: "post",
+          url: "http://localhost:8000/user/register",
+          data: formContent,
+        });
+
+        console.log(response);
+        if (response) {
+          resetForm();
+          navigate("/login");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 

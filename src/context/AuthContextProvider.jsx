@@ -1,29 +1,48 @@
-import React, { useReducer } from "react";
+import axios from "axios";
+import React, { useState } from "react";
 import { createContext } from "react";
 
-export const AuthContext = createContext(null);
-
-export const authReducer = (state, action) => {
-  switch (action.type) {
-    case "LOGIN":
-      return { user: action.payload };
-
-    case "LOGOUT":
-      return { user: null };
-
-    default:
-      return state;
-  }
-};
-
-const initialAuthState = {
+export const AuthContext = createContext({
   user: null,
-};
+  token: null,
+  isLoggedIn: false,
+  login: (token) => {},
+  logout: () => {},
+  setUser: (user) => {},
+});
 
 const AuthContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, initialAuthState);
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
+  const [user, setUser] = useState(localStorage.getItem("user") || null);
+  const isLoggedIn = !!token;
+
+  const loginHandler = (token) => {
+    setToken(token);
+    localStorage.setItem("token", token);
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  };
+
+  const logoutHandler = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
+  const setUserData = (user) => {
+    setUser(user);
+    localStorage.setItem("user", user);
+  };
+
+  const authContextValue = {
+    token: token,
+    user: user,
+    isLoggedIn: isLoggedIn,
+    login: loginHandler,
+    logout: logoutHandler,
+    setUser: setUserData,
+  };
+
   return (
-    <AuthContext.Provider value={{ ...state, dispatch }}>
+    <AuthContext.Provider value={authContextValue}>
       {children}
     </AuthContext.Provider>
   );
