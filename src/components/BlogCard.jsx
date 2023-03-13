@@ -13,6 +13,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { CardActionArea, Paper } from "@mui/material";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 const BlogCard = ({ blog }) => {
   return (
@@ -44,7 +45,7 @@ const BlogCard = ({ blog }) => {
             </IconButton>
           }
           title="Asbin Khanal"
-          subheader="September 14, 2016"
+          subheader={moment(blog.createdAt).fromNow()}
         />
 
         <Link className="links" to={`/blog/${blog._id}`}>

@@ -14,15 +14,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Box, CardActionArea, Container, Paper, useTheme } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import moment from "moment";
 import { AccessTime, BorderColor, Create, Delete } from "@mui/icons-material";
 
 const BlogDetails = () => {
   const [blog, setBlog] = useState({});
   let { blogId } = useParams();
-  const theme = useTheme();
-  console.log(theme);
-  const myColor = theme.palette.primary.main;
-  console.log(myColor);
 
   useEffect(() => {
     const getBlog = async () => {
@@ -132,7 +129,7 @@ const BlogDetails = () => {
               }}
             >
               <AccessTime fontSize="inherit" />
-              19 hrs ago
+              {moment(blog.createdAt).format("Do MMMM YYYY, h:mm a")}
             </Typography>
           </CardContent>
 
@@ -148,18 +145,17 @@ const BlogDetails = () => {
           />
 
           <CardContent sx={{ width: "100%" }}>
-            <Typography
-              variant="body2"
+            <Box
+              component="div"
               color="text.secondary"
               sx={{
                 overflowWrap: "break-word",
                 overflow: "hidden",
-                textOverflow: "ellipsis",
+                listStyle: "inherit",
                 textAlign: "justify",
               }}
-            >
-              {blog.content}
-            </Typography>
+              dangerouslySetInnerHTML={{ __html: blog.content }}
+            ></Box>
           </CardContent>
 
           {/* <CardActions disableSpacing>

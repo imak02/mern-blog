@@ -23,44 +23,49 @@ export default function CreateBlog() {
   const [value, setValue] = useState("");
   const [image, setImage] = useState(null);
 
+  const navigate = useNavigate();
+
   var toolbarOptions = [
     [{ header: [1, 2, false] }],
     ["bold", "italic", "underline", "strike", "blockquote"],
     [{ align: ["", "center", "justify"] }],
     [{ list: "ordered" }, { list: "bullet" }],
     [{ color: [] }, { background: [] }],
-    [{ script: "sub" }, { script: "super" }],
-    ["link", "image"],
     ["clean"],
   ];
-  // console.log(auth);
 
   const formik = useFormik({
     initialValues: {
       title: "",
-      image: "",
+      image: null,
       description: "",
+      content: "",
     },
 
-    // onSubmit: async (values, { resetForm }) => {
-    //   try {
-    //     const response = await axios({
-    //       method: "post",
-    //       url: "/blog/new",
-    //       data: values,
-    //     });
+    onSubmit: async (values, { resetForm }) => {
+      const formData = new FormData();
+      formData.set("title", values.title);
+      formData.set("image", values.image);
+      formData.set("description", values.description);
+      formData.set("content", value);
 
-    //     if (response) {
-    //       auth.login(response.data.data.token);
-    //       resetForm();
-    //       navigate("/");
-    //     }
+      try {
+        const response = await axios({
+          method: "post",
+          url: "/blog/new",
+          data: formData,
+        });
 
-    //     console.log(response);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
+        if (response) {
+          resetForm();
+          navigate("/");
+        }
+
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    },
   });
 
   return (
@@ -103,18 +108,47 @@ export default function CreateBlog() {
                 color="success"
                 aria-label="add"
                 variant="extended"
+                component="label"
                 sx={{ mb: 2 }}
               >
                 <Add sx={{ mr: 1 }} />
                 Upload Image
-                <input
+                <Input
+                  fullWidth
+                  id="image"
+                  name="image"
                   type="file"
-                  value={(e) => {
-                    e.target.files[0];
+                  onChange={(event) => {
+                    formik.setFieldValue("image", event.currentTarget.files[0]);
+                    setImage(URL.createObjectURL(event.target.files[0]));
+                  }}
+                  error={formik.touched.image && Boolean(formik.errors.image)}
+                  sx={{ mb: 2, display: "none" }}
+                />
+                {/* <input
+                  name="image"
+                  type="file"
+                  onChange={(event) => {
+                    formik.setFieldValue("image", event.currentTarget.files[0]);
+                    setImage(event.target.files[0]);
                   }}
                   hidden
-                />
+                /> */}
               </Fab>
+
+              {image && (
+                <Box
+                  component="img"
+                  src={image}
+                  sx={{
+                    height: "300px",
+                    width: "500px",
+                    objectFit: "cover",
+                    margin: 2,
+                    alignSelf: "center",
+                  }}
+                />
+              )}
 
               <TextField
                 fullWidth
@@ -153,8 +187,12 @@ export default function CreateBlog() {
 
               <ReactQuill
                 theme="snow"
+                modules={{
+                  toolbar: {
+                    container: toolbarOptions,
+                  },
+                }}
                 value={value}
-                modules={{ toolbar: toolbarOptions }}
                 onChange={setValue}
                 placeholder="Content..."
               />
