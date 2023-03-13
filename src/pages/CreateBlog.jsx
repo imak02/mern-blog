@@ -6,17 +6,33 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { Chip, Container, Divider, Input } from "@mui/material";
+import { Chip, Container, Divider, Fab, Input } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
-import { Google, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Add, Google, Visibility, VisibilityOff } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContextProvider";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import "./CreateBlog.scss";
 
 export default function CreateBlog() {
+  const [value, setValue] = useState("");
+  const [image, setImage] = useState(null);
+
+  var toolbarOptions = [
+    [{ header: [1, 2, false] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [{ align: ["", "center", "justify"] }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ color: [] }, { background: [] }],
+    [{ script: "sub" }, { script: "super" }],
+    ["link", "image"],
+    ["clean"],
+  ];
   // console.log(auth);
 
   const formik = useFormik({
@@ -61,108 +77,103 @@ export default function CreateBlog() {
       }}
     >
       <Container>
-        <Grid
-          container
-          component="main"
-          sx={{
-            borderRight: "3px solid red",
-            borderBottom: "3px solid red",
-          }}
-        >
-          {/* <Grid
-            item
-            xs={false}
-            sm={false}
-            md={6}
+        <Paper elevation={2} square sx={{ my: 2, p: 2, height: "100%" }}>
+          <Box
             sx={{
-              backgroundImage: (t) =>
-                t.palette.mode === "light"
-                  ? "url(https://images.pexels.com/photos/1431282/pexels-photo-1431282.jpeg?auto=compress&cs=tinysrgb&w=1600)"
-                  : "url(https://images.pexels.com/photos/1431282/pexels-photo-1431282.jpeg?auto=compress&cs=tinysrgb&w=1600)",
-              backgroundRepeat: "no-repeat",
-              backgroundColor: (t) =>
-                t.palette.mode === "light"
-                  ? t.palette.grey[50]
-                  : t.palette.grey[900],
-              backgroundSize: "cover",
-              backgroundPosition: "start",
+              my: 3,
+              mx: 3,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              height: "100%",
             }}
-          /> */}
-          <Grid
-            item
-            // xs={12}
-            // sm={12}
-            // md={6}
-            component={Paper}
-            elevation={0}
-            square
-            sx={{ my: { xs: 2, md: 0 }, height: "100%" }}
           >
             <Box
+              component="form"
+              onSubmit={formik.handleSubmit}
               sx={{
-                my: 8,
-                mx: 4,
+                mt: 1,
+                width: "100%",
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center",
-                height: "100%",
+                alignItems: "flex-start",
               }}
             >
-              <Box
-                component="form"
-                onSubmit={formik.handleSubmit}
-                sx={{ mt: 1, width: "100%" }}
+              <Fab
+                color="success"
+                aria-label="add"
+                variant="extended"
+                sx={{ mb: 2 }}
               >
-                <Button variant="contained" component="label">
-                  Upload Image
-                  <input type="file" hidden />
-                </Button>
-                <TextField
-                  fullWidth
-                  id="title"
-                  name="title"
-                  color="primary"
-                  autoComplete="off"
-                  label="Title"
-                  value={formik.values.title}
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  error={formik.touched.title && Boolean(formik.errors.title)}
-                  helperText={formik.touched.title && formik.errors.title}
-                  sx={{ marginY: 2 }}
+                <Add sx={{ mr: 1 }} />
+                Upload Image
+                <input
+                  type="file"
+                  value={(e) => {
+                    e.target.files[0];
+                  }}
+                  hidden
                 />
-                <TextField
-                  fullWidth
-                  id="description"
-                  name="description"
-                  label="Description"
-                  color="focusInput"
-                  type="text"
-                  variant="outlined"
-                  value={formik.values.description}
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  error={
-                    formik.touched.description &&
-                    Boolean(formik.errors.description)
-                  }
-                  helperText={
-                    formik.touched.description && formik.errors.description
-                  }
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                  // disabled={isLoading}
-                >
-                  {formik.isSubmitting ? "Signing In..." : "Sign In"}
-                </Button>
-              </Box>
+              </Fab>
+
+              <TextField
+                fullWidth
+                id="title"
+                name="title"
+                color="primary"
+                autoComplete="off"
+                label="Title"
+                value={formik.values.title}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                error={formik.touched.title && Boolean(formik.errors.title)}
+                helperText={formik.touched.title && formik.errors.title}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                id="description"
+                name="description"
+                label="Description"
+                color="focusInput"
+                type="text"
+                variant="outlined"
+                value={formik.values.description}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.description &&
+                  Boolean(formik.errors.description)
+                }
+                helperText={
+                  formik.touched.description && formik.errors.description
+                }
+                sx={{ mb: 2 }}
+              />
+
+              <ReactQuill
+                theme="snow"
+                value={value}
+                modules={{ toolbar: toolbarOptions }}
+                onChange={setValue}
+                placeholder="Content..."
+              />
+
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  alignSelf: "flex-end",
+                }}
+                // disabled={isLoading}
+              >
+                {formik.isSubmitting ? "Posting..." : "Post"}
+              </Button>
             </Box>
-          </Grid>
-        </Grid>
+          </Box>
+        </Paper>
       </Container>
     </Box>
   );

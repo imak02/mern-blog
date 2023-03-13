@@ -27,7 +27,8 @@ const BlogCard = ({ blog }) => {
       <Card
         sx={{
           width: "100%",
-          backgroundColor: "background.default",
+          backgroundColor: (t) =>
+            t.palette.mode === "light" ? "#EDDBC7" : t.palette.grey[800],
           px: 2,
         }}
       >

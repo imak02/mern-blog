@@ -43,7 +43,13 @@ const router = createBrowserRouter([
 
 const App = () => {
   return (
-    <Box sx={{ backgroundColor: "background.default", minHeight: "100vh" }}>
+    <Box
+      sx={{
+        backgroundColor: (t) =>
+          t.palette.mode === "light" ? "#BDCDD6" : t.palette.background.default,
+        minHeight: "100vh",
+      }}
+    >
       <RouterProvider router={router} />
     </Box>
   );
