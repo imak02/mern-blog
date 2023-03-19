@@ -35,8 +35,8 @@ const BlogCard = ({ blog }) => {
       >
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              R
+            <Avatar sx={{ bgcolor: red[500] }} alt={blog?.author?.name}>
+              {blog?.author?.name}
             </Avatar>
           }
           action={
@@ -44,7 +44,7 @@ const BlogCard = ({ blog }) => {
               <MoreVertIcon />
             </IconButton>
           }
-          title="Asbin Khanal"
+          title={blog?.author?.name}
           subheader={moment(blog.createdAt).fromNow()}
         />
 

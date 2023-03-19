@@ -1,9 +1,15 @@
 import { Box, LinearProgress } from "@mui/material";
-import React from "react";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import React, { useContext } from "react";
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from "react-router-dom";
 
 //Pages
 import NavBar from "./components/NavBar";
+import { AuthContext } from "./context/AuthContextProvider";
 import BlogDetails from "./pages/BlogDetails";
 import CreateBlog from "./pages/CreateBlog";
 import ErrorPage from "./pages/ErrorPage";
@@ -11,6 +17,17 @@ import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
+
+const ProtectedRoute = ({ children }) => {
+  const auth = useContext(AuthContext);
+  const isLoggedIn = auth.isLoggedIn;
+
+  if (!isLoggedIn) {
+    return <Navigate to="/login" />;
+  } else {
+    return children;
+  }
+};
 
 const Layout = () => {
   return (
@@ -34,7 +51,14 @@ const router = createBrowserRouter([
         element: <BlogDetails />,
       },
       { path: "/profile", element: <Profile /> },
-      { path: "/blog/create", element: <CreateBlog /> },
+      {
+        path: "/blog/create",
+        element: (
+          <ProtectedRoute>
+            <CreateBlog />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
   { path: "/login", element: <Login /> },

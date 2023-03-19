@@ -104,7 +104,7 @@ const BlogDetails = () => {
                 alignItems: "center",
               }}
             >
-              <Create fontSize="inherit" /> Asbin Khanal
+              <Create fontSize="inherit" /> {blog?.author?.name}
             </Typography>
 
             <Typography

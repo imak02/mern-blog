@@ -30,6 +30,7 @@ const ProfileListItem = (props) => {
 
 const Profile = () => {
   const authCtx = useContext(AuthContext);
+  console.log(authCtx);
   const user = authCtx.user;
 
   return (
@@ -117,19 +118,15 @@ const Profile = () => {
             justifyContent: "center",
           }}
         >
-          <Grid item>
-            {" "}
-            <BlogCard />
-          </Grid>
-          <Grid item>
-            {" "}
-            <BlogCard />
-          </Grid>
-
-          {/* <Card sx={{ my: 4, bgcolor: "yellow", p: 2 }}> */}
-
-          {/* </Card> */}
+          {/* <Grid item>
+            {blogs.map((blog) => (
+              <BlogCard key={blog._id} blog={blog} />
+            ))}
+          </Grid> */}
         </Grid>
+        {/* <Card sx={{ my: 4, bgcolor: "yellow", p: 2 }}> */}
+
+        {/* </Card> */}
       </Grid>
     </Container>
   );
