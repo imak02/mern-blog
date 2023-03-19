@@ -23,13 +23,12 @@
 }
 
 .ql-editor.ql-blank::before {
-  color: red;
+  color: inherit;
 }
 
 .ql-snow.ql-toolbar {
   button,
   .ql-picker-label {
-    color: "orange";
     background-color: pink;
   }
 }

@@ -1,20 +1,12 @@
-import Avatar from "@mui/material/Avatar";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import { Chip, Container, Divider, Fab, Input } from "@mui/material";
-import React, { useContext, useState } from "react";
+import { Card, CardMedia, Container, Fab, Input } from "@mui/material";
+import React, { useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
-import { Add, Google, Visibility, VisibilityOff } from "@mui/icons-material";
-import { Link, useNavigate } from "react-router-dom";
+import { Button, TextField } from "@mui/material";
+import { Add } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { AuthContext } from "../context/AuthContextProvider";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "./CreateBlog.scss";
@@ -82,7 +74,7 @@ export default function CreateBlog() {
       }}
     >
       <Container>
-        <Paper elevation={2} square sx={{ my: 2, p: 2, height: "100%" }}>
+        <Paper elevation={2} square sx={{ my: 2, py: 2, height: "100%" }}>
           <Box
             sx={{
               my: 3,
@@ -137,17 +129,15 @@ export default function CreateBlog() {
               </Fab>
 
               {image && (
-                <Box
-                  component="img"
-                  src={image}
+                <Card
                   sx={{
-                    height: "300px",
-                    width: "500px",
-                    objectFit: "cover",
-                    margin: 2,
+                    maxWidth: { xs: 350, md: 500 },
+                    mb: 2,
                     alignSelf: "center",
                   }}
-                />
+                >
+                  <CardMedia component="img" src={image} title="Uploads" />
+                </Card>
               )}
 
               <TextField
@@ -194,7 +184,7 @@ export default function CreateBlog() {
                 }}
                 value={value}
                 onChange={setValue}
-                placeholder="Content..."
+                placeholder="Enter your content here..."
               />
 
               <Button
