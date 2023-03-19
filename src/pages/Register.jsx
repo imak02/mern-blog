@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import {
+  Alert,
   Chip,
   Divider,
   FormControl,
@@ -64,6 +65,7 @@ const validationSchema = Yup.object({
 const Register = () => {
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -112,6 +114,7 @@ const Register = () => {
           navigate("/login");
         }
       } catch (error) {
+        setError(error);
         console.log(error);
       }
     },
@@ -327,6 +330,12 @@ const Register = () => {
                   </FormHelperText>
                 </FormControl>
               </Grid>
+
+              {error && (
+                <Alert severity="error">
+                  Error — <strong>{error?.response?.data?.message}</strong>
+                </Alert>
+              )}
 
               <Button
                 type="submit"

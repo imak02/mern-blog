@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { Chip, Container, Divider } from "@mui/material";
+import { Alert, AlertTitle, Chip, Container, Divider } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -27,6 +27,7 @@ const validationSchema = Yup.object({
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -63,6 +64,7 @@ export default function Login() {
 
         console.log(response);
       } catch (error) {
+        setError(error);
         console.log(error);
       }
     },
@@ -202,6 +204,12 @@ export default function Login() {
                     label="Remember me"
                   />
                 </Grid>
+
+                {error && (
+                  <Alert severity="error">
+                    Error — <strong>{error?.response?.data?.message}</strong>
+                  </Alert>
+                )}
 
                 <Button
                   type="submit"
