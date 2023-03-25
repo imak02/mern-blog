@@ -26,7 +26,7 @@ const HomePage = () => {
         alignItems: "center",
         flexWrap: "wrap",
         rowGap: 10,
-        justifyContent: "space-between",
+        justifyContent: { xs: "center", xl: "space-between" },
       }}
     >
       {blogs.map((blog) => (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
@@ -12,14 +12,32 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Box, CardActionArea, Container, Paper, useTheme } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 import { AccessTime, BorderColor, Create, Delete } from "@mui/icons-material";
+import { AuthContext } from "../context/AuthContextProvider";
 
 const BlogDetails = () => {
   const [blog, setBlog] = useState({});
+  const auth = useContext(AuthContext);
   let { blogId } = useParams();
+  const navigate = useNavigate();
+
+  const authorId = blog?.author?._id;
+  const userId = auth?.user?._id;
+
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(`/blog/${blogId}`);
+
+      if (response.status === 200) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const getBlog = async () => {
@@ -29,6 +47,8 @@ const BlogDetails = () => {
 
     getBlog();
   }, []);
+
+  console.log(blog);
 
   return (
     <Container
@@ -64,7 +84,7 @@ const BlogDetails = () => {
                 sx={{
                   lineHeight: 1.4,
                   overflowWrap: "break-word",
-                  textAlign: "center",
+                  textAlign: { xs: "left", md: "center" },
                   fontWeight: 700,
                 }}
               >
@@ -72,19 +92,23 @@ const BlogDetails = () => {
               </Typography>
             }
             action={
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: { xs: "column", md: "row" },
-                }}
-              >
-                <IconButton aria-label="settings">
-                  <BorderColor color="success" />
-                </IconButton>
-                <IconButton aria-label="settings">
-                  <Delete color="error" />
-                </IconButton>
-              </Box>
+              authorId === userId && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "column", md: "row" },
+                  }}
+                >
+                  <Link to={`/blog/edit/${blogId}`}>
+                    <IconButton aria-label="settings">
+                      <BorderColor color="success" />
+                    </IconButton>
+                  </Link>
+                  <IconButton aria-label="settings" onClick={handleDelete}>
+                    <Delete color="error" />
+                  </IconButton>
+                </Box>
+              )
             }
           />
 

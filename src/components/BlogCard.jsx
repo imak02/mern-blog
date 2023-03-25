@@ -23,6 +23,7 @@ const BlogCard = ({ blog }) => {
         borderRight: "3px solid red",
         borderBottom: "3px solid red",
         width: { xs: "100%", md: 700 },
+        // minHeight: 650,
       }}
     >
       <Card
@@ -31,6 +32,7 @@ const BlogCard = ({ blog }) => {
           backgroundColor: (t) =>
             t.palette.mode === "light" ? "#EDDBC7" : t.palette.grey[800],
           px: 2,
+          minHeight: 650,
         }}
       >
         <CardHeader

@@ -1,18 +1,54 @@
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import { Card, CardMedia, Container, Fab, Input } from "@mui/material";
+import {
+  Card,
+  CardMedia,
+  Container,
+  Fab,
+  Input,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { Button, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import * as Yup from "yup";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "./CreateBlog.scss";
 
+const FILE_SIZE = 1024 * 1024;
+const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
+
+const validationSchema = Yup.object({
+  title: Yup.string("Enter title for the blog.").required("Title is required"),
+
+  image: Yup.mixed()
+    .required("Image is required")
+    .test(
+      "fileSize",
+      "File size is limited to 1 Mb",
+      (value) => value && value.size <= FILE_SIZE
+    )
+    .test(
+      "fileFormat",
+      "Unsupported Format",
+      (value) => value && SUPPORTED_FORMATS.includes(value.type)
+    ),
+  description: Yup.string("Enter description for the blog.").required(
+    "Description is required"
+  ),
+  content: Yup.string("Enter content for the blog.").required(
+    "Content is required"
+  ),
+});
+
 export default function CreateBlog() {
   const [value, setValue] = useState("");
+  const [focus, setFocus] = useState(false);
+
   const [image, setImage] = useState(null);
 
   const navigate = useNavigate();
@@ -33,13 +69,16 @@ export default function CreateBlog() {
       description: "",
       content: "",
     },
+    validationSchema: validationSchema,
 
     onSubmit: async (values, { resetForm }) => {
       const formData = new FormData();
       formData.set("title", values.title);
       formData.set("image", values.image);
       formData.set("description", values.description);
-      formData.set("content", value);
+      formData.set("content", values.content);
+
+      console.log(values);
 
       try {
         const response = await axios({
@@ -50,6 +89,7 @@ export default function CreateBlog() {
 
         if (response) {
           resetForm();
+
           navigate("/");
         }
 
@@ -59,6 +99,17 @@ export default function CreateBlog() {
       }
     },
   });
+
+  const handleFocus = () => {
+    setFocus(true);
+  };
+
+  const handleBlur = () => {
+    setFocus(false);
+    if (!formik.touched.content) {
+      formik.setFieldTouched("content", true);
+    }
+  };
 
   return (
     <Box
@@ -101,7 +152,7 @@ export default function CreateBlog() {
                 aria-label="add"
                 variant="extended"
                 component="label"
-                sx={{ mb: 2 }}
+                sx={{ mb: 1 }}
               >
                 <Add sx={{ mr: 1 }} />
                 Upload Image
@@ -127,6 +178,17 @@ export default function CreateBlog() {
                   hidden
                 /> */}
               </Fab>
+
+              {formik.touched.image && formik.errors.image && (
+                <Typography
+                  color="error"
+                  variant="body2"
+                  component="p"
+                  sx={{ mb: 2, ml: 2, fontSize: 12 }}
+                >
+                  {formik.errors.image}
+                </Typography>
+              )}
 
               {image && (
                 <Card
@@ -182,10 +244,36 @@ export default function CreateBlog() {
                     container: toolbarOptions,
                   },
                 }}
+                name="content"
+                placeholder="Enter your content here..."
+                value={formik.values.content}
+                onChange={(e) => formik.setFieldValue("content", e)}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+
+              {/* <ReactQuill
+                theme="snow"
+                modules={{
+                  toolbar: {
+                    container: toolbarOptions,
+                  },
+                }}
+                placeholder="Enter your content here..."
                 value={value}
                 onChange={setValue}
-                placeholder="Enter your content here..."
-              />
+              /> */}
+
+              {formik.touched.content && formik.errors.content && (
+                <Typography
+                  color="error"
+                  variant="body2"
+                  component="p"
+                  sx={{ mb: 2, ml: 2, fontSize: 12 }}
+                >
+                  {formik.errors.content}
+                </Typography>
+              )}
 
               <Button
                 type="submit"

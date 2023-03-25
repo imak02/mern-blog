@@ -12,6 +12,7 @@ import NavBar from "./components/NavBar";
 import { AuthContext } from "./context/AuthContextProvider";
 import BlogDetails from "./pages/BlogDetails";
 import CreateBlog from "./pages/CreateBlog";
+import EditBlog from "./pages/EditBlog";
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
@@ -56,6 +57,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <CreateBlog />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/blog/edit/:blogId",
+        element: (
+          <ProtectedRoute>
+            <EditBlog />
           </ProtectedRoute>
         ),
       },
