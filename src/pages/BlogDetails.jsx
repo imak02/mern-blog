@@ -48,8 +48,6 @@ const BlogDetails = () => {
     getBlog();
   }, []);
 
-  console.log(blog);
-
   return (
     <Container
       maxWidth="xl"

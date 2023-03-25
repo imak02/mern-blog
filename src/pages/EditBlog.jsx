@@ -8,35 +8,20 @@ import {
   Input,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { Button, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import * as Yup from "yup";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "./CreateBlog.scss";
 
-const FILE_SIZE = 1024 * 1024;
-const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
-
 const validationSchema = Yup.object({
   title: Yup.string("Enter title for the blog.").required("Title is required"),
 
-  image: Yup.mixed()
-    .required("Image is required")
-    .test(
-      "fileSize",
-      "File size is limited to 1 Mb",
-      (value) => value && value.size <= FILE_SIZE
-    )
-    .test(
-      "fileFormat",
-      "Unsupported Format",
-      (value) => value && SUPPORTED_FORMATS.includes(value.type)
-    ),
   description: Yup.string("Enter description for the blog.").required(
     "Description is required"
   ),
@@ -45,11 +30,26 @@ const validationSchema = Yup.object({
   ),
 });
 
-export default function CreateBlog() {
-  const [value, setValue] = useState("");
+export default function EditBlog() {
+  const [blog, setBlog] = useState("");
   const [focus, setFocus] = useState(false);
 
   const [image, setImage] = useState(null);
+  let { blogId } = useParams();
+
+  useEffect(() => {
+    try {
+      const getBlog = async () => {
+        const response = await axios.get(`/blog/${blogId}`);
+        setBlog(response?.data?.data);
+        const imageURL = `http://localhost:8000${response?.data?.data?.image}`;
+        setImage(imageURL);
+      };
+      getBlog();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const navigate = useNavigate();
 
@@ -64,12 +64,13 @@ export default function CreateBlog() {
 
   const formik = useFormik({
     initialValues: {
-      title: "",
-      image: null,
-      description: "",
-      content: "",
+      title: blog.title ?? "",
+      image: blog.image ?? "",
+      description: blog.description ?? "",
+      content: blog.content ?? "",
     },
     validationSchema: validationSchema,
+    enableReinitialize: true,
 
     onSubmit: async (values, { resetForm }) => {
       const formData = new FormData();
@@ -80,8 +81,8 @@ export default function CreateBlog() {
 
       try {
         const response = await axios({
-          method: "post",
-          url: "/blog/new",
+          method: "put",
+          url: `/blog/${blogId}`,
           data: formData,
         });
 
@@ -123,6 +124,9 @@ export default function CreateBlog() {
       }}
     >
       <Container>
+        {/* <Typography sx={{ my: 2, fontFamily:"" }} variant="h4" align="center">
+          Edit Blog
+        </Typography> */}
         <Paper elevation={2} square sx={{ my: 2, py: 2, height: "100%" }}>
           <Box
             sx={{
@@ -150,7 +154,7 @@ export default function CreateBlog() {
                 aria-label="add"
                 variant="extended"
                 component="label"
-                sx={{ mb: 1 }}
+                sx={{ mb: 2 }}
               >
                 <Add sx={{ mr: 1 }} />
                 Upload Image
@@ -182,7 +186,7 @@ export default function CreateBlog() {
                   color="error"
                   variant="body2"
                   component="p"
-                  sx={{ mb: 2, ml: 2, fontSize: 12 }}
+                  sx={{ mb: 2, ml: 2, mt: -1, fontSize: 12 }}
                 >
                   {formik.errors.image}
                 </Typography>
@@ -202,6 +206,7 @@ export default function CreateBlog() {
 
               <TextField
                 fullWidth
+                variant="outlined"
                 id="title"
                 name="title"
                 color="primary"
@@ -216,12 +221,12 @@ export default function CreateBlog() {
               />
               <TextField
                 fullWidth
+                variant="outlined"
                 id="description"
                 name="description"
                 label="Description"
                 color="focusInput"
                 type="text"
-                variant="outlined"
                 value={formik.values.description}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
