@@ -235,7 +235,10 @@ const NavBar = () => {
                 <Fab
                   aria-label="DarkMode"
                   size="small"
-                  onClick={() => setMyThemeMode("dark")}
+                  onClick={() => {
+                    setMyThemeMode("dark");
+                    localStorage.setItem("myThemeMode", "dark");
+                  }}
                 >
                   <DarkMode fontSize="small" />
                 </Fab>
@@ -245,7 +248,10 @@ const NavBar = () => {
                 <Fab
                   aria-label="LightMode"
                   size="small"
-                  onClick={() => setMyThemeMode("light")}
+                  onClick={() => {
+                    setMyThemeMode("light");
+                    localStorage.setItem("myThemeMode", "light");
+                  }}
                 >
                   <LightMode fontSize="small" />
                 </Fab>
