@@ -135,9 +135,9 @@ const BlogDetails = () => {
                 key={index}
                 color="text.secondary"
                 sx={{
-                  overflowWrap: "break-word",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
+                  // overflowWrap: "break-word",
+                  // overflow: "hidden",
+                  // textOverflow: "ellipsis",
                   display: { xs: "none", md: "flex" },
                 }}
               >

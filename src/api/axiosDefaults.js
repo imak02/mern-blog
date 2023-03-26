@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_API;
 
 const token = localStorage.getItem("token");
 console.log(token);
