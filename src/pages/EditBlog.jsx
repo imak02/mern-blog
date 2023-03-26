@@ -42,7 +42,7 @@ export default function EditBlog() {
       const getBlog = async () => {
         const response = await axios.get(`/blog/${blogId}`);
         setBlog(response?.data?.data);
-        const imageURL = `http://localhost:8000${response?.data?.data?.image}`;
+        const imageURL = `${axios.defaults.baseURL}${response?.data?.data?.image}`;
         setImage(imageURL);
       };
       getBlog();

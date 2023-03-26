@@ -271,11 +271,9 @@ const NavBar = () => {
                   {/* {userResult.isLoading ? (
                     <CircularProgress />
                   ) : ( */}
-                  <Avatar
-                    alt={user.name}
-                    src="profile.jpeg"
-                    sx={{ bgcolor: "orange", color: "black" }}
-                  />
+                  <Avatar sx={{ bgcolor: "orange", color: "black" }}>
+                    {user.name}
+                  </Avatar>
                   {/* )} */}
                 </IconButton>
               </Tooltip>
@@ -321,7 +319,7 @@ const NavBar = () => {
               >
                 <Link to={`/profile`} className="links">
                   <MenuItem onClick={handleCloseUserMenu}>
-                    <Avatar alt={user.name} src="profile.jpeg" /> {user.name}
+                    <Avatar>{user.name}</Avatar> {user.name}
                   </MenuItem>
                 </Link>
 

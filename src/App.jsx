@@ -81,6 +81,7 @@ const App = () => {
         backgroundColor: (t) =>
           t.palette.mode === "light" ? "#BDCDD6" : t.palette.background.default,
         minHeight: "100vh",
+        color: "text.primary",
       }}
     >
       <RouterProvider router={router} />
