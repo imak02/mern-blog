@@ -129,18 +129,21 @@ const BlogDetails = () => {
               <Create fontSize="inherit" /> {blog?.author?.name}
             </Typography>
 
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{
-                overflowWrap: "break-word",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                display: { xs: "none", md: "flex" },
-              }}
-            >
-              #blog #myblog #content
-            </Typography>
+            {blog?.tags?.map((tag, index) => (
+              <Typography
+                variant="body2"
+                key={index}
+                color="text.secondary"
+                sx={{
+                  overflowWrap: "break-word",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: { xs: "none", md: "flex" },
+                }}
+              >
+                {`#${tag}`}
+              </Typography>
+            ))}
 
             <Typography
               variant="body2"

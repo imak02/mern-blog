@@ -1,6 +1,7 @@
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import {
+  Autocomplete,
   Card,
   CardMedia,
   Container,
@@ -18,6 +19,24 @@ import * as Yup from "yup";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "./CreateBlog.scss";
+
+const tagOptions = [
+  "Love",
+  "Article",
+  "Poem",
+  "Technology",
+  "Story",
+  "Fiction",
+  "News",
+  "Comedy",
+  // { title: "The Shawshank Redemption", year: 1994 },
+  // { title: "The Godfather", year: 1972 },
+  // { title: "The Godfather: Part II", year: 1974 },
+  // { title: "The Dark Knight", year: 2008 },
+  // { title: "12 Angry Men", year: 1957 },
+  // { title: "Schindler's List", year: 1993 },
+  // { title: "Pulp Fiction", year: 1994 },
+];
 
 const FILE_SIZE = 1024 * 1024;
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
@@ -66,6 +85,7 @@ export default function CreateBlog() {
     initialValues: {
       title: "",
       image: null,
+      tags: [],
       description: "",
       content: "",
     },
@@ -75,6 +95,7 @@ export default function CreateBlog() {
       const formData = new FormData();
       formData.set("title", values.title);
       formData.set("image", values.image);
+      formData.set("tags", values.tags);
       formData.set("description", values.description);
       formData.set("content", values.content);
 
@@ -90,8 +111,6 @@ export default function CreateBlog() {
 
           navigate("/");
         }
-
-        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -204,7 +223,7 @@ export default function CreateBlog() {
                 fullWidth
                 id="title"
                 name="title"
-                color="primary"
+                color="focusInput"
                 autoComplete="off"
                 label="Title"
                 value={formik.values.title}
@@ -233,6 +252,30 @@ export default function CreateBlog() {
                   formik.touched.description && formik.errors.description
                 }
                 sx={{ mb: 2 }}
+              />
+
+              <Autocomplete
+                color="focusInput"
+                name="tags"
+                multiple
+                options={tagOptions}
+                filterSelectedOptions
+                value={formik.values.tags}
+                onChange={(e, value) => {
+                  formik.setFieldValue("tags", value);
+                }}
+                fullWidth
+                sx={{ mb: 2 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    name="tags"
+                    id="tags"
+                    label="Tags"
+                    color="focusInput"
+                    onBlur={formik.handleBlur}
+                  />
+                )}
               />
 
               <ReactQuill
