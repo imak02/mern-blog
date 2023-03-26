@@ -54,7 +54,7 @@ const BlogCard = ({ blog }) => {
           <CardMedia
             component="img"
             height="300"
-            src={`http://localhost:8000${blog.image}`}
+            src={`${import.meta.env.VITE_BACKEND_API}${blog.image}`}
             alt={blog.image}
             sx={{ p: 2, borderRadius: "15px" }}
           />
