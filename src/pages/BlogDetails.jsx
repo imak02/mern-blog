@@ -11,15 +11,35 @@ import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Box, CardActionArea, Container, Paper, useTheme } from "@mui/material";
+import {
+  Box,
+  CardActionArea,
+  Container,
+  Fab,
+  Paper,
+  useTheme,
+} from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import { AccessTime, BorderColor, Create, Delete } from "@mui/icons-material";
+import {
+  AccessTime,
+  BorderColor,
+  Comment,
+  Create,
+  Delete,
+} from "@mui/icons-material";
 import { AuthContext } from "../context/AuthContextProvider";
+import CommentBox from "../components/CommentBox";
+import BlogLoader from "../components/BlogLoader";
+import ErrorPage from "./ErrorPage";
 
 const BlogDetails = () => {
   const [blog, setBlog] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const [showComments, setShowComments] = useState(false);
   const auth = useContext(AuthContext);
   let { blogId } = useParams();
   const navigate = useNavigate();
@@ -41,12 +61,23 @@ const BlogDetails = () => {
 
   useEffect(() => {
     const getBlog = async () => {
-      const response = await axios.get(`/blog/${blogId}`);
-      setBlog(response?.data?.data);
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await axios.get(`/blog/${blogId}`);
+        setBlog(response?.data?.data);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        console.log(error);
+      }
     };
 
     getBlog();
   }, []);
+
+  if (loading) return <BlogLoader />;
+  if (error) return <ErrorPage />;
 
   return (
     <Container
@@ -181,6 +212,26 @@ const BlogDetails = () => {
               }}
               dangerouslySetInnerHTML={{ __html: blog.content }}
             ></Box>
+
+            <Fab
+              variant="extended"
+              size="medium"
+              color="primary"
+              aria-label="add"
+              sx={{ mt: 4 }}
+              onClick={() => {
+                setShowComments((prev) => !prev);
+              }}
+            >
+              <Comment sx={{ mr: 1 }} />
+              Comments
+            </Fab>
+            {showComments && (
+              <Box>
+                <CommentBox blogId={blogId} />
+                {/* <Comments blogId={blogId} /> */}
+              </Box>
+            )}
           </CardContent>
 
           {/* <CardActions disableSpacing>
