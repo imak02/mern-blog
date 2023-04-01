@@ -37,7 +37,13 @@ const BlogCard = ({ blog }) => {
       >
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: red[500] }} alt={blog?.author?.name}>
+            <Avatar
+              sx={{ bgcolor: red[500] }}
+              src={`${import.meta.env.VITE_BACKEND_API}${
+                blog?.author?.profilePic
+              }`}
+              alt={blog?.author?.name}
+            >
               {blog?.author?.name}
             </Avatar>
           }

@@ -104,6 +104,9 @@ const Profile = () => {
             <CardMedia sx={{ display: "flex", justifyContent: "center" }}>
               <Avatar
                 sx={{ width: 150, height: 150, backgroundColor: "skyblue" }}
+                src={`${import.meta.env.VITE_BACKEND_API}${
+                  userData?.profilePic
+                }`}
               >
                 {userData.name}
               </Avatar>
@@ -117,6 +120,22 @@ const Profile = () => {
               >
                 {userData.name}
               </Typography>
+
+              {userData?.bio?.length > 0 && (
+                <Typography
+                  gutterBottom
+                  // variant="h5"
+                  component="blockquote"
+                  sx={{
+                    color: "text.secondary",
+                    fontStyle: "italic",
+                    textAlign: "center",
+                    marginTop: 3,
+                  }}
+                >
+                  {`"${userData.bio}"`}
+                </Typography>
+              )}
               <List sx={{ textAlign: "center" }}>
                 <ProfileListItem
                   primary="Username:"

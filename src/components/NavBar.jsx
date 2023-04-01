@@ -277,7 +277,12 @@ const NavBar = () => {
                   {/* {userResult.isLoading ? (
                     <CircularProgress />
                   ) : ( */}
-                  <Avatar sx={{ bgcolor: "orange", color: "black" }}>
+                  <Avatar
+                    src={`${import.meta.env.VITE_BACKEND_API}${
+                      user?.profilePic
+                    }`}
+                    sx={{ bgcolor: "orange", color: "black" }}
+                  >
                     {user.name}
                   </Avatar>
                   {/* )} */}
@@ -325,7 +330,14 @@ const NavBar = () => {
               >
                 <Link to={`/profile`} className="links">
                   <MenuItem onClick={handleCloseUserMenu}>
-                    <Avatar>{user.name}</Avatar> {user.name}
+                    <Avatar
+                      src={`${import.meta.env.VITE_BACKEND_API}${
+                        user?.profilePic
+                      }`}
+                    >
+                      {user.name}
+                    </Avatar>{" "}
+                    {user.name}
                   </MenuItem>
                 </Link>
 

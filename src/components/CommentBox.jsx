@@ -105,22 +105,27 @@ const CommentBox = ({ blogId }) => {
             <Box key={comment._id}>
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                  <Avatar
+                    alt={comment.commenter.name}
+                    src={`${import.meta.env.VITE_BACKEND_API}${
+                      comment?.commenter?.profilePic
+                    }`}
+                  />
                 </ListItemAvatar>
                 <ListItemText
                   primary={comment.commenter.name}
                   secondary={
                     <React.Fragment>
+                      {moment(comment.createdAt).format("Do MMMM YYYY")}
+                      {/* {comment.createdAt} */}
                       <Typography
                         sx={{ display: "inline" }}
                         component="span"
                         variant="body2"
                         color="text.primary"
                       >
-                        {moment(comment.createdAt).format("Do MMMM YYYY")}
-                        {/* {comment.createdAt} */}
+                        {` —— ${comment.comment}`}
                       </Typography>
-                      {` —— ${comment.comment}`}
                     </React.Fragment>
                   }
                 />

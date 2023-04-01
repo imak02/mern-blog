@@ -13,6 +13,7 @@ import { AuthContext } from "./context/AuthContextProvider";
 import BlogDetails from "./pages/BlogDetails";
 import CreateBlog from "./pages/CreateBlog";
 import EditBlog from "./pages/EditBlog";
+import EditProfile from "./pages/EditProfile";
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
@@ -51,7 +52,23 @@ const router = createBrowserRouter([
         path: "/blog/:blogId",
         element: <BlogDetails />,
       },
-      { path: "/profile", element: <Profile /> },
+      {
+        path: "/profile",
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/profile/edit/:userId",
+        element: (
+          <ProtectedRoute>
+            <EditProfile />
+          </ProtectedRoute>
+        ),
+      },
+
       {
         path: "/blog/create",
         element: (
