@@ -92,6 +92,7 @@ const Profile = () => {
                 justifyContent: "flex-end",
 
                 my: 1,
+                pr: 4,
               }}
             >
               <Link className="links" to={`/profile/edit/${user._id}`}>

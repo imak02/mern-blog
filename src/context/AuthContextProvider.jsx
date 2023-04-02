@@ -24,7 +24,7 @@ const AuthContextProvider = ({ children }) => {
 
   const logoutHandler = () => {
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    window.location.href = "/";
   };
 
   const setUserData = (user) => {

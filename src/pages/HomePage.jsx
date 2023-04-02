@@ -39,6 +39,7 @@ const HomePage = () => {
         maxWidth="xl"
         sx={{
           mt: 4,
+          pb: 10,
           display: "flex",
           alignItems: "center",
           flexWrap: "wrap",

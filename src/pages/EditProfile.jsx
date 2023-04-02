@@ -12,13 +12,14 @@ import {
   TextField,
 } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BlogLoader from "../components/BlogLoader";
 import ErrorPage from "./ErrorPage";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Add, AddCircle } from "@mui/icons-material";
+import { AuthContext } from "../context/AuthContextProvider";
 
 const nameRegex = /^[a-zA-Z-' ]+$/;
 const userNameRegex = /^[a-z0-9_-]{3,15}$/;
@@ -49,6 +50,8 @@ const EditProfile = () => {
   const [profilePic, setProfilePic] = useState(null);
   const params = useParams();
   const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+
   const userId = params.userId;
 
   useEffect(() => {
@@ -58,8 +61,8 @@ const EditProfile = () => {
           setLoading(true);
           setError(null);
           const response = await axios.get(`/user/${userId}`);
-          console.log(response);
           setUserData(response?.data?.data);
+          auth.setUser(response?.data?.data);
           const imageURL = `${axios.defaults.baseURL}${response?.data?.data?.profilePic}`;
           setProfilePic(imageURL);
           setLoading(false);

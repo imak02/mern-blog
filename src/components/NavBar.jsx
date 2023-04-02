@@ -59,7 +59,7 @@ const NavBar = () => {
       };
       getUser();
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, auth]);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -342,18 +342,7 @@ const NavBar = () => {
                 </Link>
 
                 <Divider />
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <ListItemIcon>
-                    <PersonAdd fontSize="small" />
-                  </ListItemIcon>
-                  Add another account
-                </MenuItem>
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <ListItemIcon>
-                    <Settings fontSize="small" />
-                  </ListItemIcon>
-                  Settings
-                </MenuItem>
+
                 <MenuItem
                   onClick={() => {
                     auth.logout();

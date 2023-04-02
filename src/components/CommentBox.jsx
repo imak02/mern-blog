@@ -69,7 +69,7 @@ const CommentBox = ({ blogId }) => {
   return (
     <Box>
       {isLoggedIn && (
-        <Box sx={{ mt: 3 }} component="form">
+        <Box sx={{ mt: 3 }} component="form" onSubmit={postComment}>
           <TextField
             id="comment"
             name="comment"
@@ -82,9 +82,10 @@ const CommentBox = ({ blogId }) => {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
+                    type="submit"
                     aria-label="Post Comment"
                     color="info"
-                    onClick={postComment}
+                    // onClick={postComment}
                     //   onMouseDown={handleMouseDownPassword}
                     edge="end"
                   >

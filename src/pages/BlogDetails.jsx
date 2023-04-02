@@ -12,11 +12,16 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
+  Alert,
+  AlertTitle,
   Box,
+  Button,
   CardActionArea,
   Container,
   Fab,
   Paper,
+  Snackbar,
+  SnackbarContent,
   useTheme,
 } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -38,6 +43,7 @@ const BlogDetails = () => {
   const [blog, setBlog] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [alert, setAlert] = useState(false);
 
   const [showComments, setShowComments] = useState(false);
   const auth = useContext(AuthContext);
@@ -48,6 +54,7 @@ const BlogDetails = () => {
   const userId = auth?.user?._id;
 
   const handleDelete = async () => {
+    setAlert(false);
     try {
       const response = await axios.delete(`/blog/${blogId}`);
 
@@ -57,6 +64,14 @@ const BlogDetails = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlert(false);
   };
 
   useEffect(() => {
@@ -106,6 +121,40 @@ const BlogDetails = () => {
               t.palette.mode === "light" ? "#EDDBC7" : t.palette.grey[800],
           }}
         >
+          <Snackbar
+            sx={{ maxWidth: 600 }}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            open={alert}
+            onClose={handleClose}
+          >
+            <Alert
+              severity="warning"
+              key="deleteAlert"
+              action={
+                <Box sx={{ display: "flex", gap: 3 }}>
+                  <Button
+                    onClick={handleClose}
+                    color="info"
+                    size="small"
+                    variant="contained"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleDelete}
+                    color="error"
+                    size="small"
+                    variant="contained"
+                  >
+                    Confirm
+                  </Button>
+                </Box>
+              }
+            >
+              Are you sure you want to delete this blog?
+            </Alert>
+          </Snackbar>
+
           <CardHeader
             title={
               <Typography
@@ -133,7 +182,12 @@ const BlogDetails = () => {
                       <BorderColor color="success" />
                     </IconButton>
                   </Link>
-                  <IconButton aria-label="settings" onClick={handleDelete}>
+                  <IconButton
+                    aria-label="settings"
+                    onClick={() => {
+                      setAlert(true);
+                    }}
+                  >
                     <Delete color="error" />
                   </IconButton>
                 </Box>
@@ -195,15 +249,25 @@ const BlogDetails = () => {
             alt={blog.image}
             sx={{
               p: 2,
-              borderRadius: "15px",
+              borderRadius: "20px",
               height: { xs: "300px", sm: "400px", md: "500px" },
             }}
           />
 
           <CardContent sx={{ width: "100%" }}>
+            <Typography
+              sx={{
+                m: 2,
+                borderLeft: "1px solid brown",
+                pl: 2,
+                color: "text.secondary",
+              }}
+            >
+              {blog.description}
+            </Typography>
             <Box
               component="div"
-              color="text.secondary"
+              color="text.primary"
               sx={{
                 overflowWrap: "break-word",
                 overflow: "hidden",

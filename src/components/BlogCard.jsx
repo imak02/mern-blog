@@ -62,7 +62,7 @@ const BlogCard = ({ blog }) => {
             height="300"
             src={`${import.meta.env.VITE_BACKEND_API}${blog.image}`}
             alt={blog.image}
-            sx={{ p: 2, borderRadius: "15px" }}
+            sx={{ p: 2, borderRadius: "20px" }}
           />
 
           <CardContent sx={{ width: "100%" }}>
