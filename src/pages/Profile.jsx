@@ -1,13 +1,22 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Alert,
   Avatar,
   Box,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   Grid,
+  IconButton,
+  InputAdornment,
   List,
   ListItem,
   ListItemText,
+  TextField,
 } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -21,6 +30,30 @@ import ProfileBlogCard from "../components/ProfileBlogCard";
 import BlogLoader from "../components/BlogLoader";
 import NoBlogs from "../components/NoBlogs";
 import ErrorPage from "./ErrorPage";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+const validationSchema = Yup.object({
+  oldP: Yup.string()
+    .min(8, "*Password must contain minimum of 8 characters")
+    .matches(
+      passwordRegex,
+      "*Must contain at least one uppercase letter, one lowercase letter, one number and one special character"
+    )
+    .required("*Password required"),
+
+  newP: Yup.string()
+    .min(8, "*Password must contain minimum of 8 characters")
+    .matches(
+      passwordRegex,
+      "*Must contain at least one uppercase letter, one lowercase letter, one number and one special character"
+    )
+    .required("*Password required"),
+});
 
 const ProfileListItem = (props) => {
   return (
@@ -37,6 +70,30 @@ const Profile = () => {
   const [userData, setUserData] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [showPassword1, setShowPassword1] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
+  const [passwordError, setPasswordError] = useState(null);
+
+  const handleClickShowPassword1 = () => setShowPassword1((show) => !show);
+
+  const handleMouseDownPassword1 = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClickShowPassword2 = () => setShowPassword2((show) => !show);
+
+  const handleMouseDownPassword2 = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClickOpen = () => {
+    setOpenModal(true);
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);
+  };
 
   const authCtx = useContext(AuthContext);
   const user = authCtx.user;
@@ -60,6 +117,34 @@ const Profile = () => {
       getUser();
     }
   }, [userId]);
+
+  const formik = useFormik({
+    initialValues: {
+      oldP: "",
+      newP: "",
+    },
+    validationSchema: validationSchema,
+
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        setPasswordError(null);
+        const response = await axios({
+          method: "patch",
+          url: `/user/changePassword/${user._id}`,
+          data: values,
+        });
+
+        console.log(response);
+        if (response) {
+          resetForm();
+          setOpenModal(false);
+        }
+      } catch (error) {
+        setPasswordError(error);
+        console.log(error);
+      }
+    },
+  });
 
   if (loading) return <BlogLoader />;
   if (error) return <ErrorPage />;
@@ -149,6 +234,103 @@ const Profile = () => {
                   secondary={userData?.blogs?.length}
                 />
               </List>
+              <Box sx={{ display: "flex", mt: 2, justifyContent: "center" }}>
+                {" "}
+                <Button variant="outlined" onClick={handleClickOpen}>
+                  Change Password
+                </Button>
+                <Dialog open={openModal} onClose={handleClose} fullWidth>
+                  <Box component="form" onSubmit={formik.handleSubmit}>
+                    <DialogTitle>Change Password</DialogTitle>
+                    <DialogContent>
+                      <TextField
+                        margin="dense"
+                        id="oldP"
+                        name="oldP"
+                        color="focusInput"
+                        label="Current Password"
+                        type={showPassword1 ? "text" : "password"}
+                        value={formik.values.oldP}
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        error={
+                          formik.touched.oldP && Boolean(formik.errors.oldP)
+                        }
+                        helperText={formik.touched.oldP && formik.errors.oldP}
+                        fullWidth
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowPassword1}
+                                onMouseDown={handleMouseDownPassword1}
+                                edge="end"
+                              >
+                                {showPassword1 ? (
+                                  <VisibilityOff />
+                                ) : (
+                                  <Visibility />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+
+                      <TextField
+                        margin="dense"
+                        id="newP"
+                        name="newP"
+                        label="New Password"
+                        color="focusInput"
+                        type={showPassword2 ? "text" : "password"}
+                        value={formik.values.newP}
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                        error={
+                          formik.touched.newP && Boolean(formik.errors.newP)
+                        }
+                        helperText={formik.touched.newP && formik.errors.newP}
+                        fullWidth
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowPassword2}
+                                onMouseDown={handleMouseDownPassword2}
+                                edge="end"
+                              >
+                                {showPassword2 ? (
+                                  <VisibilityOff />
+                                ) : (
+                                  <Visibility />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+
+                      {passwordError && (
+                        <Alert severity="error">
+                          Error —{" "}
+                          <strong>
+                            {passwordError?.response?.data?.message}
+                          </strong>
+                        </Alert>
+                      )}
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose}>Cancel</Button>
+                      <Button type="submit" disabled={formik.isSubmitting}>
+                        {formik.isSubmitting ? "Changing..." : "Change"}
+                      </Button>
+                    </DialogActions>
+                  </Box>
+                </Dialog>
+              </Box>
             </CardContent>
           </Card>
         </Grid>
