@@ -355,8 +355,9 @@ const Register = () => {
                 {" "}
                 <Chip label="OR" />
               </Divider>
+            </Box>
+            <Link to="http://localhost:8000/user/auth/google">
               <Button
-                type="submit"
                 fullWidth
                 color="secondary"
                 variant="contained"
@@ -365,7 +366,7 @@ const Register = () => {
                 <Google sx={{ mr: 1 }} />
                 Sign Up with Google
               </Button>
-            </Box>
+            </Link>
           </Box>
         </Grid>
         <Grid

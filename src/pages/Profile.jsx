@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
   Avatar,
+  Badge,
   Box,
   Container,
   Dialog,
@@ -32,7 +33,12 @@ import NoBlogs from "../components/NoBlogs";
 import ErrorPage from "./ErrorPage";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Verified,
+  VerifiedOutlined,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
 
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -61,7 +67,6 @@ const ProfileListItem = (props) => {
       <ListItem>
         <ListItemText primary={props.primary} secondary={props.secondary} />
       </ListItem>
-      <Divider />
     </>
   );
 };
@@ -74,6 +79,7 @@ const Profile = () => {
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const [passwordError, setPasswordError] = useState(null);
+  const [response, setResponse] = useState(null);
 
   const handleClickShowPassword1 = () => setShowPassword1((show) => !show);
 
@@ -93,6 +99,12 @@ const Profile = () => {
 
   const handleClose = () => {
     setOpenModal(false);
+  };
+
+  const sendVerificationEmail = async () => {
+    setResponse(null);
+    const response = await axios.get("/user/resend-link");
+    setResponse(response.data.message);
   };
 
   const authCtx = useContext(AuthContext);
@@ -204,7 +216,14 @@ const Profile = () => {
                 component="div"
                 sx={{ textAlign: "center" }}
               >
-                {userData.name}
+                {userData.name}{" "}
+                <Badge>
+                  {userData.emailVerified ? (
+                    <Verified fontSize="small" />
+                  ) : (
+                    <VerifiedOutlined fontSize="small" />
+                  )}{" "}
+                </Badge>
               </Typography>
 
               {userData?.bio?.length > 0 && (
@@ -227,12 +246,35 @@ const Profile = () => {
                   primary="Username:"
                   secondary={userData.userName}
                 />
+                <Divider />
                 <ProfileListItem primary="Email:" secondary={userData.email} />
+                {!userData.emailVerified && (
+                  <Box color="red">
+                    Verify your email to access all privileges.
+                    <Button
+                      variant="outlined"
+                      color="success"
+                      size="small"
+                      sx={{ m: 2 }}
+                      onClick={sendVerificationEmail}
+                    >
+                      Send Verification Mail
+                    </Button>
+                  </Box>
+                )}
+
+                {response && (
+                  <Typography color="blue" variant="body2" fontSize="small">
+                    {response}
+                  </Typography>
+                )}
+                <Divider />
 
                 <ProfileListItem
                   primary="Blogs:"
                   secondary={userData?.blogs?.length}
                 />
+                <Divider />
               </List>
               <Box sx={{ display: "flex", mt: 2, justifyContent: "center" }}>
                 {" "}
