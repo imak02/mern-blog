@@ -222,7 +222,7 @@ export default function Login() {
                 </Button>
                 <Grid container>
                   <Grid item xs>
-                    <Link to="/">Forgot password?</Link>
+                    <Link to="/forgot-password">Forgot password?</Link>
                   </Grid>
                   <Grid item>
                     New Here? <Link to="/register">Signup</Link>
